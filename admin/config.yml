@@ -1,0 +1,17 @@
+
+backend:
+  name: git-gateway
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "site"
+    label: "Site"
+    files:
+      - label: "Accueil"
+        name: "home"
+        file: "content/home.json"
+        fields:
+          - {label: "Titre", name: "titre", widget: "string"}
+          - {label: "Texte", name: "texte", widget: "text"}
