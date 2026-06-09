@@ -1,20 +1,1839 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <title>Mon programme</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATLAS — Programme 16 Semaines</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #111113;
+    --surface2: #1a1a1e;
+    --border: #252528;
+    --accent: #e8ff47;
+    --accent2: #ff6b35;
+    --accent3: #4af0c4;
+    --text: #f0f0f2;
+    --muted: #6b6b70;
+    --danger: #ff4444;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,11,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue';
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--accent);
+  }
+
+  .nav-stats {
+    display: flex;
+    gap: 24px;
+  }
+
+  .nav-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .nav-stat-val {
+    font-family: 'JetBrains Mono';
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .nav-stat-lbl {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .hero {
+    padding: 48px 24px 32px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue';
+    font-size: clamp(64px, 10vw, 120px);
+    line-height: 0.9;
+    color: var(--text);
+  }
+
+  .hero-title span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .athlete-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 220px;
+  }
+
+  .athlete-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 24px;
+  }
+
+  .athlete-stat:last-child {
+    border: none;
+  }
+
+  .athlete-stat-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .athlete-stat-val {
+    font-family: 'JetBrains Mono';
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .week-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 32px;
+  }
+
+  .week-bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .week-bar-title {
+    font-family: 'Bebas Neue';
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    gap: 4px;
+  }
+
+  .week-dot {
+    height: 8px;
+    border-radius: 2px;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .week-dot:hover {
+    transform: scaleY(2);
+  }
+
+  .phase-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .phase-legend span {
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .phase-legend i {
+    width: 10px;
+    height: 4px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  .phases {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 32px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phase-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+
+  .phase-card.p1::before {
+    background: var(--accent3);
+  }
+
+  .phase-card.p2::before {
+    background: var(--accent);
+  }
+
+  .phase-card.p3::before {
+    background: var(--accent2);
+  }
+
+  .phase-card.p4::before {
+    background: #b47fff;
+  }
+
+  .phase-card.active {
+    border-color: var(--accent);
+    background: var(--surface2);
+  }
+
+  .phase-card:hover {
+    border-color: var(--muted);
+  }
+
+  .phase-num {
+    font-family: 'JetBrains Mono';
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .phase-name {
+    font-family: 'Bebas Neue';
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .phase-weeks {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .phase-focus {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 100px;
+  }
+
+  .phase-banner {
+    padding: 12px 24px;
+    margin-bottom: 24px;
+    border-radius: 10px;
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .phase-banner.p1 {
+    background: rgba(74,240,196,0.05);
+    border-color: rgba(74,240,196,0.3);
+  }
+
+  .phase-banner.p2 {
+    background: rgba(232,255,71,0.05);
+    border-color: rgba(232,255,71,0.3);
+  }
+
+  .phase-banner.p3 {
+    background: rgba(255,107,53,0.05);
+    border-color: rgba(255,107,53,0.3);
+  }
+
+  .phase-banner.p4 {
+    background: rgba(180,127,255,0.05);
+    border-color: rgba(180,127,255,0.3);
+  }
+
+  .phase-banner-name {
+    font-family: 'Bebas Neue';
+    font-size: 20px;
+    letter-spacing: 3px;
+  }
+
+  .phase-banner-desc {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .session-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .session-tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-family: 'Bebas Neue';
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .session-tab.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .session-tab:hover:not(.active) {
+    border-color: var(--muted);
+    color: var(--text);
+  }
+
+  .session-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .session-header {
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .session-title {
+    font-family: 'Bebas Neue';
+    font-size: 32px;
+    letter-spacing: 3px;
+  }
+
+  .session-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .session-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono';
+  }
+
+  .session-badge.primary {
+    background: rgba(232,255,71,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .exercise-list {
+    padding: 8px;
+  }
+
+  .exercise-block {
+    margin-bottom: 4px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .exercise-row {
+    display: grid;
+    grid-template-columns: 40px 1fr auto auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--surface2);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .exercise-row:hover {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .exercise-row.completed-ex {
+    background: rgba(74,240,196,0.05);
+  }
+
+  .ex-num {
+    font-family: 'JetBrains Mono';
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .ex-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .ex-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .ex-sets {
+    font-family: 'JetBrains Mono';
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .ex-reps {
+    font-family: 'JetBrains Mono';
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .ex-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .ex-check.done {
+    background: var(--accent3);
+    border-color: var(--accent3);
+  }
+
+  .ex-check.done::after {
+    content: '✓';
+    font-size: 14px;
+    color: var(--bg);
+    font-weight: 700;
+  }
+
+  .exercise-detail {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 16px;
+    display: none;
+  }
+
+  .exercise-detail.open {
+    display: block;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .detail-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .detail-box-lbl {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .detail-box-val {
+    font-family: 'JetBrains Mono';
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .detail-note {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding: 10px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .set-tracker {
+    margin-top: 12px;
+  }
+
+  .set-tracker-title {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .sets-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .set-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono';
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .set-pill.done-set {
+    background: rgba(74,240,196,0.12);
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+
+  .set-pill input {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 50px;
+    font-family: 'JetBrains Mono';
+    font-size: 12px;
+    color: inherit;
+    text-align: center;
+  }
+
+  .btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Bebas Neue';
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .btn:hover {
+    border-color: var(--muted);
+  }
+
+  .btn.accent {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .timer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10,10,11,0.96);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 200;
+    gap: 24px;
+  }
+
+  .timer-display {
+    font-family: 'Bebas Neue';
+    font-size: 48px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .timer-display.warning {
+    color: var(--accent2);
+  }
+
+  .timer-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .timer-controls {
+    display: flex;
+    gap: 12px;
+  }
+
+  .timer-presets {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .preset-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono';
+    font-size: 12px;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .preset-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  #timer-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.9s linear;
+  }
+
+  .rm-section {
+    margin: 32px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .rm-title {
+    font-family: 'Bebas Neue';
+    font-size: 24px;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rm-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .rm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .rm-lift {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .rm-lift-name {
+    font-family: 'Bebas Neue';
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .rm-inputs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .rm-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono';
+    font-size: 14px;
+    color: var(--text);
+    width: 100%;
+    outline: none;
+  }
+
+  .rm-input:focus {
+    border-color: var(--accent);
+  }
+
+  .rm-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .rm-1rm {
+    font-family: 'Bebas Neue';
+    font-size: 28px;
+    color: var(--accent);
+  }
+
+  .rm-pct {
+    font-family: 'JetBrains Mono';
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  .cardio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .cardio-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .cardio-type {
+    font-family: 'Bebas Neue';
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+
+  .cardio-detail {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .log-section {
+    margin: 32px 0;
+  }
+
+  .log-title {
+    font-family: 'Bebas Neue';
+    font-size: 24px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .log-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .log-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .log-entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .log-date {
+    font-family: 'JetBrains Mono';
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .log-content {
+    font-size: 13px;
+  }
+
+  .empty-log {
+    text-align: center;
+    padding: 32px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .tooltip {
+    position: relative;
+  }
+
+  .tooltip-text {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 50;
+  }
+
+  .tooltip:hover .tooltip-text {
+    opacity: 1;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-in {
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  @keyframes pulse {
+    0%,100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .pulsing {
+    animation: pulse 1s ease infinite;
+  }
+
+  @media(max-width: 768px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .athlete-card {
+      display: none;
+    }
+
+    .phases {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .detail-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rm-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cardio-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .week-grid {
+      grid-template-columns: repeat(8, 1fr);
+    }
+
+    .exercise-row {
+      grid-template-columns: 32px 1fr auto auto;
+    }
+
+    .ex-reps {
+      display: none;
+    }
+
+    .session-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .session-meta {
+      justify-content: flex-start;
+    }
+
+    .timer-bar {
+      position: static;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .timer-presets {
+      width: 100%;
+    }
+
+    .nav-stats {
+      gap: 12px;
+    }
+  }
+</style>
 </head>
+
 <body>
 
-<h1 id="titre"></h1>
-<p id="texte"></p>
+<nav>
+  <div class="logo">ATLAS</div>
+
+  <div class="nav-stats">
+    <div class="nav-stat">
+      <span class="nav-stat-val" id="nav-week">S1</span>
+      <span class="nav-stat-lbl">Semaine</span>
+    </div>
+
+    <div class="nav-stat">
+      <span class="nav-stat-val" id="nav-sessions">0</span>
+      <span class="nav-stat-lbl">Séances</span>
+    </div>
+
+    <div class="nav-stat">
+      <span class="nav-stat-val" id="nav-progress">0%</span>
+      <span class="nav-stat-lbl">Progression</span>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div>
+    <div class="hero-title" id="hero-title">Chargement...</div>
+    <div class="hero-sub" id="hero-sub"></div>
+  </div>
+
+  <div class="athlete-card" id="athlete-card"></div>
+</div>
+
+<div class="week-bar">
+  <div class="week-bar-header">
+    <span class="week-bar-title">PROGRESSION — 16 SEMAINES</span>
+    <span style="font-family:'JetBrains Mono';font-size:11px;color:var(--muted);" id="phase-label">
+      PHASE 1
+    </span>
+  </div>
+
+  <div class="week-grid" id="week-grid"></div>
+
+  <div class="phase-legend" id="phase-legend"></div>
+</div>
+
+<div class="phases" id="phases-container"></div>
+
+<div class="main">
+
+  <div id="phase-banner" class="phase-banner p1">
+    <div>
+      <div class="phase-banner-name" id="banner-name">PHASE 1</div>
+      <div class="phase-banner-desc" id="banner-desc"></div>
+    </div>
+  </div>
+
+  <div class="session-tabs" id="session-tabs"></div>
+
+  <div id="session-content"></div>
+
+  <div id="cardio-section"></div>
+
+  <div class="rm-section">
+    <div class="rm-title">CALCULATEUR 1RM</div>
+
+    <div class="rm-grid">
+      <div class="rm-lift">
+        <div class="rm-lift-name">BENCH PRESS</div>
+
+        <div class="rm-inputs">
+          <input class="rm-input" type="number" placeholder="Kg" id="bench-kg" oninput="calc1RM('bench')">
+          <input class="rm-input" type="number" placeholder="Reps" id="bench-reps" oninput="calc1RM('bench')">
+        </div>
+
+        <div class="rm-result">
+          <div class="rm-1rm" id="bench-1rm">— kg</div>
+          <div class="rm-percents" id="bench-pcts"></div>
+        </div>
+      </div>
+
+      <div class="rm-lift">
+        <div class="rm-lift-name">SQUAT</div>
+
+        <div class="rm-inputs">
+          <input class="rm-input" type="number" placeholder="Kg" id="squat-kg" oninput="calc1RM('squat')">
+          <input class="rm-input" type="number" placeholder="Reps" id="squat-reps" oninput="calc1RM('squat')">
+        </div>
+
+        <div class="rm-result">
+          <div class="rm-1rm" id="squat-1rm">— kg</div>
+          <div class="rm-percents" id="squat-pcts"></div>
+        </div>
+      </div>
+
+      <div class="rm-lift">
+        <div class="rm-lift-name">DEADLIFT</div>
+
+        <div class="rm-inputs">
+          <input class="rm-input" type="number" placeholder="Kg" id="dead-kg" oninput="calc1RM('dead')">
+          <input class="rm-input" type="number" placeholder="Reps" id="dead-reps" oninput="calc1RM('dead')">
+        </div>
+
+        <div class="rm-result">
+          <div class="rm-1rm" id="dead-1rm">— kg</div>
+          <div class="rm-percents" id="dead-pcts"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-title">JOURNAL D'ENTRAÎNEMENT</div>
+
+    <div id="log-entries" class="log-entries">
+      <div class="empty-log">Aucune séance enregistrée.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="timer-bar" id="timer-bar">
+  <div id="timer-progress"></div>
+
+  <div>
+    <div class="timer-label" id="timer-label">REPOS / PRÊT</div>
+    <div class="timer-display" id="timer-display">00:00</div>
+  </div>
+
+  <div>
+    <div class="timer-label" style="margin-bottom:6px;">RÉCUPÉRATION RAPIDE</div>
+
+    <div class="timer-presets">
+      <button class="preset-btn" onclick="setTimer(60)">1 MIN</button>
+      <button class="preset-btn" onclick="setTimer(90)">1:30</button>
+      <button class="preset-btn" onclick="setTimer(120)">2 MIN</button>
+      <button class="preset-btn" onclick="setTimer(180)">3 MIN</button>
+      <button class="preset-btn" onclick="setTimer(300)">5 MIN</button>
+    </div>
+  </div>
+
+  <div class="timer-controls">
+    <button class="btn accent" onclick="toggleTimer()" id="timer-btn">START</button>
+    <button class="btn" onclick="resetTimer()">RESET</button>
+    <button class="btn" onclick="logSession()" style="border-color:var(--accent3);color:var(--accent3);">LOG ✓</button>
+  </div>
+</div>
 
 <script>
-fetch('/content/home.json')
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("titre").innerText = data.titre;
-    document.getElementById("texte").innerText = data.texte;
+let CMS_DATA = null;
+
+let PHASES = [];
+let SESSIONS = [];
+let CARDIO = {};
+let PHASE_PROGRESSIONS = {};
+
+let currentPhase = 1;
+let currentSession = 0;
+let expandedEx = null;
+
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
+let timerTotal = 0;
+
+let completedExercises = {};
+let completedSets = {};
+
+let sessionCount = parseInt(localStorage.getItem('atlas-sessions') || '0');
+let currentWeek = parseInt(localStorage.getItem('atlas-week') || '1');
+let logs = JSON.parse(localStorage.getItem('atlas-logs') || '[]');
+
+async function loadCMSData() {
+  try {
+    const response = await fetch('/content/home.json');
+
+    if (!response.ok) {
+      throw new Error('Impossible de charger content/home.json');
+    }
+
+    CMS_DATA = await response.json();
+
+    applyTheme(CMS_DATA.theme || {});
+    applyHero(CMS_DATA.hero || {});
+    applyAthleteStats(CMS_DATA.athleteStats || []);
+
+    PHASES = CMS_DATA.phases || [];
+    SESSIONS = CMS_DATA.sessions || [];
+
+    PHASE_PROGRESSIONS = {};
+    (CMS_DATA.phaseProgressions || []).forEach(item => {
+      PHASE_PROGRESSIONS[item.phase] = item;
+    });
+
+    CARDIO = {};
+    (CMS_DATA.cardio || []).forEach(item => {
+      const key = `p${item.phase}`;
+
+      if (!CARDIO[key]) {
+        CARDIO[key] = [];
+      }
+
+      CARDIO[key].push(item);
+    });
+
+    renderPhases();
+    renderSessionTabs();
+    renderPhaseLegend();
+
+  } catch (error) {
+    console.error(error);
+
+    document.getElementById('hero-title').innerHTML = 'ERREUR<br><span>JSON</span>';
+    document.getElementById('hero-sub').innerHTML = 'Le fichier content/home.json est introuvable ou contient une erreur.';
+  }
+}
+
+function applyTheme(theme) {
+  const root = document.documentElement;
+
+  if (theme.bg) root.style.setProperty('--bg', theme.bg);
+  if (theme.surface) root.style.setProperty('--surface', theme.surface);
+  if (theme.surface2) root.style.setProperty('--surface2', theme.surface2);
+  if (theme.border) root.style.setProperty('--border', theme.border);
+  if (theme.accent) root.style.setProperty('--accent', theme.accent);
+  if (theme.accent2) root.style.setProperty('--accent2', theme.accent2);
+  if (theme.accent3) root.style.setProperty('--accent3', theme.accent3);
+  if (theme.text) root.style.setProperty('--text', theme.text);
+  if (theme.muted) root.style.setProperty('--muted', theme.muted);
+  if (theme.danger) root.style.setProperty('--danger', theme.danger);
+}
+
+function applyHero(hero) {
+  const titleLine1 = hero.titleLine1 || 'PRO';
+  const titleAccent = hero.titleAccent || 'GRAMME';
+  const titleLine2 = hero.titleLine2 || '16 SEMAINES';
+
+  document.getElementById('hero-title').innerHTML =
+    `${escapeHTML(titleLine1)}<span>${escapeHTML(titleAccent)}</span><br>${escapeHTML(titleLine2)}`;
+
+  document.getElementById('hero-sub').innerHTML =
+    `${escapeHTML(hero.subtitle || '')}<br>${escapeHTML(hero.profile || '')}`;
+}
+
+function applyAthleteStats(stats) {
+  const container = document.getElementById('athlete-card');
+
+  if (!stats.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = stats.map(stat => `
+    <div class="athlete-stat">
+      <span class="athlete-stat-lbl">${escapeHTML(stat.label || '')}</span>
+      <span class="athlete-stat-val">${escapeHTML(stat.value || '')}</span>
+    </div>
+  `).join('');
+}
+
+function renderPhases() {
+  const container = document.getElementById('phases-container');
+
+  if (!PHASES.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = PHASES.map((ph, index) => `
+    <div class="phase-card ${escapeAttr(ph.cls || '')} ${index === 0 ? 'active' : ''}" onclick="selectPhase(${Number(ph.id)})" id="phase-card-${Number(ph.id)}">
+      <div class="phase-num">PHASE ${String(ph.id).padStart(2, '0')} — SEMAINES ${escapeHTML(ph.weeks || '')}</div>
+      <div class="phase-name">${escapeHTML(ph.name || '')}</div>
+      <div class="phase-weeks">Semaines ${escapeHTML(ph.weeks || '')}</div>
+      <div class="phase-focus">${escapeHTML(ph.focus || '')}</div>
+    </div>
+  `).join('');
+}
+
+function renderPhaseLegend() {
+  const container = document.getElementById('phase-legend');
+
+  container.innerHTML = PHASES.map(ph => `
+    <span style="color:${escapeAttr(ph.color || 'var(--accent)')};">
+      <i style="background:${escapeAttr(ph.color || 'var(--accent)')};"></i>
+      Phase ${escapeHTML(String(ph.id))} : ${escapeHTML(ph.name || '')}
+    </span>
+  `).join('');
+}
+
+function renderSessionTabs() {
+  const container = document.getElementById('session-tabs');
+
+  if (!SESSIONS.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = SESSIONS.map((session, index) => `
+    <div class="session-tab ${index === 0 ? 'active' : ''}" onclick="selectSession(${index})">
+      ${escapeHTML(session.tabLabel || session.title || `Séance ${index + 1}`)}
+    </div>
+  `).join('');
+}
+
+function renderWeekGrid() {
+  const grid = document.getElementById('week-grid');
+
+  grid.innerHTML = '';
+
+  const phaseColors = [
+    'var(--accent3)',
+    'var(--accent)',
+    'var(--accent2)',
+    '#b47fff'
+  ];
+
+  const phaseFor = week => {
+    if (week <= 4) return 0;
+    if (week <= 8) return 1;
+    if (week <= 12) return 2;
+    return 3;
+  };
+
+  for (let week = 1; week <= 16; week++) {
+    const div = document.createElement('div');
+    const phaseIndex = phaseFor(week);
+    const color = phaseColors[phaseIndex];
+
+    div.className = 'week-dot tooltip';
+
+    if (week < currentWeek) {
+      div.style.background = color;
+    } else if (week === currentWeek) {
+      div.style.background = color;
+      div.style.boxShadow = `0 0 8px ${color}`;
+    } else {
+      div.style.background = 'var(--border)';
+    }
+
+    div.innerHTML = `<span class="tooltip-text">S${week}</span>`;
+
+    div.onclick = () => {
+      currentWeek = week;
+      localStorage.setItem('atlas-week', week);
+      updateNav();
+      renderWeekGrid();
+    };
+
+    grid.appendChild(div);
+  }
+}
+
+function selectPhase(phaseId) {
+  currentPhase = Number(phaseId);
+
+  document.querySelectorAll('.phase-card').forEach(card => {
+    card.classList.remove('active');
   });
+
+  const selectedCard = document.getElementById(`phase-card-${currentPhase}`);
+
+  if (selectedCard) {
+    selectedCard.classList.add('active');
+  }
+
+  const ph = PHASES.find(item => Number(item.id) === currentPhase);
+
+  if (!ph) return;
+
+  const banner = document.getElementById('phase-banner');
+
+  banner.className = `phase-banner ${escapeAttr(ph.cls || '')}`;
+
+  document.getElementById('banner-name').textContent =
+    `PHASE ${currentPhase} — ${ph.name || ''}`;
+
+  document.getElementById('banner-desc').textContent =
+    ph.desc || '';
+
+  document.getElementById('phase-label').textContent =
+    `PHASE ${currentPhase} : ${ph.name || ''}`;
+
+  renderCardio();
+  renderSession();
+}
+
+function selectSession(index) {
+  currentSession = index;
+
+  document.querySelectorAll('.session-tab').forEach((tab, idx) => {
+    tab.classList.toggle('active', idx === index);
+  });
+
+  expandedEx = null;
+
+  renderSession();
+}
+
+function renderSession() {
+  const s = SESSIONS[currentSession];
+  const prog = PHASE_PROGRESSIONS[currentPhase] || {};
+  const key = `p${currentPhase}-s${currentSession}`;
+
+  if (!s) {
+    document.getElementById('session-content').innerHTML = `
+      <div class="session-card">
+        <div class="session-header">
+          <div class="session-title">Aucune séance configurée</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  if (!completedExercises[key]) completedExercises[key] = {};
+  if (!completedSets[key]) completedSets[key] = {};
+
+  let html = `
+    <div class="session-card animate-in">
+      <div class="session-header">
+        <div>
+          <div class="session-title">${escapeHTML(s.title || '')}</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;">
+            ${escapeHTML(s.subtitle || '')}
+          </div>
+        </div>
+
+        <div class="session-meta">
+          <div class="session-badge primary">${escapeHTML(s.badge || '')}</div>
+          <div class="session-badge">⏱ ${escapeHTML(s.duration || '')}</div>
+          <div class="session-badge">RPE ${escapeHTML(prog.rpe || '')}</div>
+          <div class="session-badge">${escapeHTML(prog.intensity || '')}</div>
+        </div>
+      </div>
+
+      <div style="padding:12px 16px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted);">
+        💡 <strong style="color:var(--text)">Phase ${currentPhase} :</strong>
+        ${escapeHTML(prog.note || '')}
+      </div>
+
+      <div class="exercise-list">
+  `;
+
+  const exercises = s.exercises || [];
+
+  if (!exercises.length) {
+    html += `
+      <div class="empty-log">
+        Aucun exercice configuré pour cette séance.
+      </div>
+    `;
+  }
+
+  exercises.forEach((ex, index) => {
+    const done = completedExercises[key][index];
+    const setsArr = completedSets[key][index] || [];
+    const isOpen = expandedEx === index;
+    const totalSets = Number(ex.sets) > 1 ? Number(ex.sets) : 1;
+    const setsDisplay = ex.setsLabel || ex.sets || 1;
+
+    html += `
+      <div class="exercise-block">
+        <div class="exercise-row ${done ? 'completed-ex' : ''}" onclick="toggleEx(${index})">
+          <div class="ex-num">${String(index + 1).padStart(2, '0')}</div>
+
+          <div>
+            <div class="ex-name">${escapeHTML(ex.name || '')}</div>
+            <div class="ex-sub">${escapeHTML(ex.sub || '')}</div>
+          </div>
+
+          <div class="ex-sets">${escapeHTML(String(setsDisplay))}×</div>
+          <div class="ex-reps">${escapeHTML(ex.reps || '')}</div>
+
+          <div class="ex-check ${done ? 'done' : ''}" onclick="event.stopPropagation(); toggleDone(${index})"></div>
+        </div>
+
+        <div class="exercise-detail ${isOpen ? 'open' : ''}">
+          <div class="detail-grid">
+            <div class="detail-box">
+              <div class="detail-box-lbl">Séries × Reps</div>
+              <div class="detail-box-val">${escapeHTML(String(setsDisplay))} × ${escapeHTML(ex.reps || '')}</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-box-lbl">Récupération</div>
+              <div class="detail-box-val">${escapeHTML(ex.rest || '')}</div>
+            </div>
+
+            <div class="detail-box">
+              <div class="detail-box-lbl">Tempo</div>
+              <div class="detail-box-val">${escapeHTML(ex.tempo || '')}</div>
+            </div>
+          </div>
+
+          <div class="detail-note">${escapeHTML(ex.note || '')}</div>
+
+          ${totalSets > 1 ? `
+            <div class="set-tracker">
+              <div class="set-tracker-title">TRACKER DE SÉRIES — Clique pour valider</div>
+
+              <div class="sets-row">
+                ${Array.from({ length: totalSets }, (_, setIndex) => `
+                  <div class="set-pill ${setsArr[setIndex] ? 'done-set' : ''}" onclick="toggleSet(${index}, ${setIndex})">
+                    S${setIndex + 1}
+                    <input
+                      type="number"
+                      placeholder="kg"
+                      value="${setsArr[setIndex]?.kg || ''}"
+                      onclick="event.stopPropagation()"
+                      onchange="saveSetKg(${index}, ${setIndex}, this.value)"
+                    >
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          ${ex.rest && ex.rest !== '—' ? `
+            <button class="btn" style="margin-top:12px;font-size:13px;" onclick="setTimerFromRest('${escapeAttr(ex.rest)}')">
+              ⏱ Lancer repos ${escapeHTML(ex.rest)}
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  document.getElementById('session-content').innerHTML = html;
+}
+
+function toggleEx(index) {
+  expandedEx = expandedEx === index ? null : index;
+  renderSession();
+}
+
+function toggleDone(index) {
+  const key = `p${currentPhase}-s${currentSession}`;
+
+  if (!completedExercises[key]) {
+    completedExercises[key] = {};
+  }
+
+  completedExercises[key][index] = !completedExercises[key][index];
+
+  renderSession();
+}
+
+function toggleSet(exIndex, setIndex) {
+  const key = `p${currentPhase}-s${currentSession}`;
+
+  if (!completedSets[key]) completedSets[key] = {};
+  if (!completedSets[key][exIndex]) completedSets[key][exIndex] = [];
+
+  completedSets[key][exIndex][setIndex] =
+    completedSets[key][exIndex][setIndex]
+      ? null
+      : { done: true, kg: '' };
+
+  expandedEx = exIndex;
+
+  renderSession();
+}
+
+function saveSetKg(exIndex, setIndex, value) {
+  const key = `p${currentPhase}-s${currentSession}`;
+
+  if (!completedSets[key]) completedSets[key] = {};
+  if (!completedSets[key][exIndex]) completedSets[key][exIndex] = [];
+  if (!completedSets[key][exIndex][setIndex]) completedSets[key][exIndex][setIndex] = {};
+
+  completedSets[key][exIndex][setIndex].kg = value;
+}
+
+function renderCardio() {
+  const cards = CARDIO[`p${currentPhase}`] || [];
+
+  let html = `
+    <hr class="section-divider">
+
+    <div class="rm-section">
+      <div class="rm-title">CARDIO — PHASE ${currentPhase}</div>
+
+      <div class="cardio-grid">
+  `;
+
+  if (!cards.length) {
+    html += `
+      <div class="empty-log">
+        Aucun cardio configuré pour cette phase.
+      </div>
+    `;
+  }
+
+  html += cards.map(card => `
+    <div class="cardio-card">
+      <div class="cardio-type">${escapeHTML(card.type || '')}</div>
+      <div class="cardio-detail">${escapeHTML(card.detail || '')}</div>
+    </div>
+  `).join('');
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  document.getElementById('cardio-section').innerHTML = html;
+}
+
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+}
+
+function setTimer(seconds) {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-btn').textContent = 'START';
+  }
+
+  timerSeconds = seconds;
+  timerTotal = seconds;
+
+  updateTimerDisplay();
+  document.getElementById('timer-progress').style.width = '0%';
+}
+
+function setTimerFromRest(restText) {
+  const text = String(restText).toLowerCase();
+
+  if (text.includes('5')) return setTimer(300);
+  if (text.includes('4')) return setTimer(240);
+  if (text.includes('3')) return setTimer(180);
+  if (text.includes('2')) return setTimer(120);
+  if (text.includes('90')) return setTimer(90);
+  if (text.includes('1')) return setTimer(60);
+  if (text.includes('60')) return setTimer(60);
+  if (text.includes('45')) return setTimer(45);
+  if (text.includes('30')) return setTimer(30);
+
+  setTimer(120);
+}
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-btn').textContent = 'REPRENDRE';
+    return;
+  }
+
+  if (timerSeconds <= 0) {
+    timerSeconds = 120;
+    timerTotal = 120;
+  }
+
+  timerRunning = true;
+
+  document.getElementById('timer-btn').textContent = 'PAUSE';
+  document.getElementById('timer-label').textContent = 'REPOS EN COURS';
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+
+    updateTimerDisplay();
+
+    const progress = timerTotal > 0
+      ? ((timerTotal - timerSeconds) / timerTotal) * 100
+      : 0;
+
+    document.getElementById('timer-progress').style.width = `${progress}%`;
+
+    if (timerSeconds <= 10) {
+      document.getElementById('timer-display').classList.add('warning');
+    } else {
+      document.getElementById('timer-display').classList.remove('warning');
+    }
+
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+
+      timerRunning = false;
+      timerSeconds = 0;
+
+      document.getElementById('timer-btn').textContent = 'START';
+      document.getElementById('timer-label').textContent = 'REPOS TERMINÉ ✓';
+      document.getElementById('timer-display').classList.add('pulsing');
+
+      setTimeout(() => {
+        document.getElementById('timer-display').classList.remove('pulsing');
+      }, 3000);
+    }
+  }, 1000);
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+
+  timerRunning = false;
+  timerSeconds = timerTotal || 0;
+
+  document.getElementById('timer-btn').textContent = 'START';
+  document.getElementById('timer-label').textContent = 'REPOS / PRÊT';
+  document.getElementById('timer-progress').style.width = '0%';
+  document.getElementById('timer-display').classList.remove('warning', 'pulsing');
+
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  document.getElementById('timer-display').textContent = formatTime(timerSeconds);
+}
+
+function calc1RM(lift) {
+  const kg = parseFloat(document.getElementById(`${lift}-kg`).value);
+  const reps = parseInt(document.getElementById(`${lift}-reps`).value);
+
+  if (!kg || !reps || reps < 1) {
+    return;
+  }
+
+  const oneRm = reps === 1
+    ? kg
+    : Math.round(kg * (1 + reps / 30));
+
+  document.getElementById(`${lift}-1rm`).textContent = `${oneRm} kg`;
+
+  const percentages = [95, 90, 85, 80, 75, 70];
+
+  document.getElementById(`${lift}-pcts`).innerHTML = percentages.map(percent => `
+    <div class="rm-pct">${percent}% = ${Math.round(oneRm * percent / 100)} kg</div>
+  `).join('');
+}
+
+function logSession() {
+  const session = SESSIONS[currentSession];
+
+  if (!session) return;
+
+  const key = `p${currentPhase}-s${currentSession}`;
+  const doneCount = Object.values(completedExercises[key] || {}).filter(Boolean).length;
+
+  const entry = {
+    date: new Date().toLocaleDateString('fr-FR'),
+    session: session.title || '',
+    phase: currentPhase,
+    done: doneCount,
+    total: (session.exercises || []).length
+  };
+
+  logs.unshift(entry);
+
+  if (logs.length > 50) {
+    logs.pop();
+  }
+
+  localStorage.setItem('atlas-logs', JSON.stringify(logs));
+
+  sessionCount++;
+  localStorage.setItem('atlas-sessions', sessionCount);
+
+  updateNav();
+  renderLogs();
+
+  document.getElementById('timer-label').textContent =
+    `Séance ${session.title || ''} enregistrée ✓`;
+}
+
+function renderLogs() {
+  const container = document.getElementById('log-entries');
+
+  if (!logs.length) {
+    container.innerHTML = '<div class="empty-log">Aucune séance enregistrée.</div>';
+    return;
+  }
+
+  container.innerHTML = logs.map(log => `
+    <div class="log-entry animate-in">
+      <div>
+        <div class="log-content">
+          Phase ${escapeHTML(String(log.phase))} · <strong>${escapeHTML(log.session || '')}</strong>
+        </div>
+
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">
+          ${escapeHTML(String(log.done))}/${escapeHTML(String(log.total))} exercices complétés
+        </div>
+      </div>
+
+      <div class="log-date">${escapeHTML(log.date || '')}</div>
+    </div>
+  `).join('');
+}
+
+function updateNav() {
+  document.getElementById('nav-week').textContent = `S${currentWeek}`;
+  document.getElementById('nav-sessions').textContent = sessionCount;
+
+  const percent = Math.round(((currentWeek - 1) / 16) * 100);
+
+  document.getElementById('nav-progress').textContent = `${percent}%`;
+}
+
+function escapeHTML(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function escapeAttr(value) {
+  return escapeHTML(value);
+}
+
+async function init() {
+  await loadCMSData();
+
+  renderWeekGrid();
+
+  if (PHASES.length) {
+    selectPhase(Number(PHASES[0].id) || 1);
+  }
+
+  if (SESSIONS.length) {
+    selectSession(0);
+  }
+
+  renderLogs();
+  updateNav();
+}
+
+init();
 </script>
 
 </body>

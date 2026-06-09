@@ -1,4 +1,173 @@
 {
-  "titre": "Mon programme mu",
-  "texte": "Bienvenue sur mon site"
+  "theme": {
+    "bg": "#0a0a0b",
+    "surface": "#111113",
+    "surface2": "#1a1a1e",
+    "border": "#252528",
+    "accent": "#e8ff47",
+    "accent2": "#ff6b35",
+    "accent3": "#4af0c4",
+    "text": "#f0f0f2",
+    "muted": "#6b6b70",
+    "danger": "#ff4444"
+  },
+  "hero": {
+    "titleLine1": "PRO",
+    "titleAccent": "GRAMME",
+    "titleLine2": "16 SEMAINES",
+    "subtitle": "Athlétisme complet — Force · Explosivité · Cardio",
+    "profile": "185 cm · 95 kg · Expert · Salle complète · 4j/semaine"
+  },
+  "athleteStats": [
+    { "label": "Bench Press", "value": "90 kg" },
+    { "label": "Squat", "value": "140 kg" },
+    { "label": "Deadlift", "value": "150 kg" },
+    { "label": "Poids", "value": "95 kg" },
+    { "label": "Niveau", "value": "EXPERT" }
+  ],
+  "phases": [
+    {
+      "id": 1,
+      "name": "FONDATION",
+      "weeks": "1-4",
+      "cls": "p1",
+      "desc": "Semaines 1-4 · Construire les bases techniques et le conditioning général · RPE 6-7 · Volume progressif",
+      "focus": "Technique · Volume modéré · Conditioning de base · Mobilité · RPE 6-7",
+      "color": "var(--accent3)"
+    },
+    {
+      "id": 2,
+      "name": "INTENSIFICATION",
+      "weeks": "5-8",
+      "cls": "p2",
+      "desc": "Semaines 5-8 · Force + hypertrophie · Volume élevé · RPE 7-8",
+      "focus": "Force hypertrophie · Volume élevé · Charges lourdes · RPE 7-8",
+      "color": "var(--accent)"
+    },
+    {
+      "id": 3,
+      "name": "PUISSANCE",
+      "weeks": "9-12",
+      "cls": "p3",
+      "desc": "Semaines 9-12 · Explosivité · Contrast training · HIIT · RPE 8-9",
+      "focus": "Explosivité · Contrast training · HIIT · RPE 8-9",
+      "color": "var(--accent2)"
+    },
+    {
+      "id": 4,
+      "name": "PEAK & TEST",
+      "weeks": "13-16",
+      "cls": "p4",
+      "desc": "Semaines 13-16 · Intensité max · Deload S15 · Test 1RM S16 · RPE 9-10",
+      "focus": "Intensité max · Deload S15 · Test 1RM S16 · RPE 9-10",
+      "color": "#b47fff"
+    }
+  ],
+  "phaseProgressions": [
+    {
+      "phase": 1,
+      "intensity": "72-78%",
+      "volume": "Volume de base",
+      "rpe": "6-7",
+      "note": "Construire la base, affiner la technique sur tous les mouvements. Priorité: forme > charge."
+    },
+    {
+      "phase": 2,
+      "intensity": "78-85%",
+      "volume": "Volume élevé",
+      "rpe": "7-8",
+      "note": "Augmenter progressivement la charge chaque semaine."
+    },
+    {
+      "phase": 3,
+      "intensity": "85-92%",
+      "volume": "Volume modéré, intensité haute",
+      "rpe": "8-9",
+      "note": "Focus explosivité. Récupération critique."
+    },
+    {
+      "phase": 4,
+      "intensity": "90-100%",
+      "volume": "Faible (deload S15)",
+      "rpe": "9-10",
+      "note": "Intensité max puis semaine de deload avant les tests."
+    }
+  ],
+  "sessions": [
+    {
+      "tabLabel": "J1 — FORCE BASSE",
+      "title": "FORCE BASSE",
+      "subtitle": "Quad / Postérieur / Explosivité",
+      "duration": "65-70 min",
+      "badge": "SQUAT FOCUS",
+      "exercises": [
+        {
+          "name": "Activation & Mobilité",
+          "sub": "Hanche, cheville, rotation T-spine",
+          "sets": 1,
+          "setsLabel": "1",
+          "reps": "10 min",
+          "rest": "—",
+          "tempo": "libre",
+          "note": "Mobilité hanche 90/90, leg swings, hip circles, cat-cow, A-skips"
+        },
+        {
+          "name": "Squat Back (Barre)",
+          "sub": "Mouvement principal",
+          "sets": 5,
+          "setsLabel": "5",
+          "reps": "5×5 (P1) → 5×3 (P3) → 3×1 (P4)",
+          "rest": "3 min",
+          "tempo": "3-0-X-1",
+          "note": "P1: 72-75% 1RM · P2: 78-82% · P3: 85-88% · P4: 90-95%."
+        }
+      ]
+    },
+    {
+      "tabLabel": "J2 — UPPER PUSH",
+      "title": "UPPER PUSH",
+      "subtitle": "Pecs / Épaules / Triceps",
+      "duration": "60-65 min",
+      "badge": "BENCH FOCUS",
+      "exercises": []
+    },
+    {
+      "tabLabel": "J3 — EXPLOSIVE",
+      "title": "EXPLOSIVITÉ",
+      "subtitle": "Puissance / Vitesse / Conditionnement",
+      "duration": "60-70 min",
+      "badge": "ATHLETIC",
+      "exercises": []
+    },
+    {
+      "tabLabel": "J4 — UPPER PULL",
+      "title": "UPPER PULL",
+      "subtitle": "Dos / Biceps / Rear Delt",
+      "duration": "60-65 min",
+      "badge": "DEADLIFT FOCUS",
+      "exercises": []
+    }
+  ],
+  "cardio": [
+    {
+      "phase": 1,
+      "type": "Zone 2 LISS",
+      "detail": "3×/semaine · 30-40 min · Vélo, rameur ou course lente · FC 130-150 bpm"
+    },
+    {
+      "phase": 1,
+      "type": "Mobilité Active",
+      "detail": "1×/semaine · 20-30 min · Yoga, foam rolling, étirements actifs"
+    },
+    {
+      "phase": 2,
+      "type": "Zone 2 Progressif",
+      "detail": "2×/semaine · 40-50 min · FC 140-155 bpm"
+    },
+    {
+      "phase": 2,
+      "type": "Threshold Run",
+      "detail": "1×/semaine · 20-25 min · Pace soutenu 75-80% FCmax"
+    }
+  ]
 }

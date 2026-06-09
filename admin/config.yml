@@ -1,8 +1,7 @@
 backend:
   name: github
-  repo: nadhemsa996/progna
+  repo: nadhensa996/progna
   branch: main
-
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
@@ -15,5 +14,92 @@ collections:
         name: "home"
         file: "content/home.json"
         fields:
-          - {label: "Titre", name: "titre", widget: "string"}
-          - {label: "Texte", name: "texte", widget: "text"}
+          - label: "Thème"
+            name: "theme"
+            widget: "object"
+            fields:
+              - { label: "Couleur fond", name: "bg", widget: "string", default: "#0a0a0b" }
+              - { label: "Couleur surface", name: "surface", widget: "string", default: "#111113" }
+              - { label: "Couleur surface 2", name: "surface2", widget: "string", default: "#1a1a1e" }
+              - { label: "Couleur bordure", name: "border", widget: "string", default: "#252528" }
+              - { label: "Accent principal", name: "accent", widget: "string", default: "#e8ff47" }
+              - { label: "Accent secondaire", name: "accent2", widget: "string", default: "#ff6b35" }
+              - { label: "Accent tertiaire", name: "accent3", widget: "string", default: "#4af0c4" }
+              - { label: "Texte principal", name: "text", widget: "string", default: "#f0f0f2" }
+              - { label: "Texte secondaire", name: "muted", widget: "string", default: "#6b6b70" }
+              - { label: "Danger", name: "danger", widget: "string", default: "#ff4444" }
+
+          - label: "Hero"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "Titre ligne 1", name: "titleLine1", widget: "string", default: "PRO" }
+              - { label: "Mot accentué", name: "titleAccent", widget: "string", default: "GRAMME" }
+              - { label: "Titre ligne 2", name: "titleLine2", widget: "string", default: "16 SEMAINES" }
+              - { label: "Sous-titre", name: "subtitle", widget: "text", default: "Athlétisme complet — Force · Explosivité · Cardio" }
+              - { label: "Profil", name: "profile", widget: "string", default: "185 cm · 95 kg · Expert · Salle complète · 4j/semaine" }
+
+          - label: "Stats athlète"
+            name: "athleteStats"
+            widget: "list"
+            summary: "{{fields.label}} : {{fields.value}}"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Valeur", name: "value", widget: "string" }
+
+          - label: "Phases"
+            name: "phases"
+            widget: "list"
+            summary: "Phase {{fields.id}} - {{fields.name}}"
+            fields:
+              - { label: "ID", name: "id", widget: "number", value_type: "int" }
+              - { label: "Nom", name: "name", widget: "string" }
+              - { label: "Semaines", name: "weeks", widget: "string" }
+              - { label: "Classe CSS", name: "cls", widget: "string", default: "p1" }
+              - { label: "Description bannière", name: "desc", widget: "text" }
+              - { label: "Focus carte", name: "focus", widget: "text" }
+              - { label: "Couleur", name: "color", widget: "string", default: "var(--accent)" }
+
+          - label: "Progression des phases"
+            name: "phaseProgressions"
+            widget: "list"
+            summary: "Phase {{fields.phase}}"
+            fields:
+              - { label: "Phase", name: "phase", widget: "number", value_type: "int" }
+              - { label: "Intensité", name: "intensity", widget: "string" }
+              - { label: "Volume", name: "volume", widget: "string" }
+              - { label: "RPE", name: "rpe", widget: "string" }
+              - { label: "Note", name: "note", widget: "text" }
+
+          - label: "Séances"
+            name: "sessions"
+            widget: "list"
+            summary: "{{fields.tabLabel}}"
+            fields:
+              - { label: "Label onglet", name: "tabLabel", widget: "string" }
+              - { label: "Titre", name: "title", widget: "string" }
+              - { label: "Sous-titre", name: "subtitle", widget: "string" }
+              - { label: "Durée", name: "duration", widget: "string" }
+              - { label: "Badge", name: "badge", widget: "string" }
+              - label: "Exercices"
+                name: "exercises"
+                widget: "list"
+                summary: "{{fields.name}}"
+                fields:
+                  - { label: "Nom", name: "name", widget: "string" }
+                  - { label: "Sous-titre", name: "sub", widget: "string" }
+                  - { label: "Nombre de séries", name: "sets", widget: "number", required: false }
+                  - { label: "Séries affichées", name: "setsLabel", widget: "string", required: false }
+                  - { label: "Reps", name: "reps", widget: "string" }
+                  - { label: "Repos", name: "rest", widget: "string" }
+                  - { label: "Tempo", name: "tempo", widget: "string" }
+                  - { label: "Note", name: "note", widget: "text" }
+
+          - label: "Cardio"
+            name: "cardio"
+            widget: "list"
+            summary: "Phase {{fields.phase}} - {{fields.type}}"
+            fields:
+              - { label: "Phase", name: "phase", widget: "number", value_type: "int" }
+              - { label: "Type", name: "type", widget: "string" }
+              - { label: "Détail", name: "detail", widget: "text" }
